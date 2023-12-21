@@ -35,7 +35,7 @@
         <a href="/restaurants/{{Restaurant.id}}" class="text-secondary">
           <div class="card mb-3">
             <img class="card-img-top" src="{{Restaurant.image}}"
-              alt={{restaurant.name}}>
+              alt={{Restaurant.name}}>
             <div class="card-body p-3">
               <h6 class="card-title mb-1">{{Restaurant.name}}</h6>
 
@@ -45,10 +45,10 @@
               <span class="badge rounded-pill bg-danger font-weight-normal">
                 {{Restaurant.rating}}
                 <i class="fas fa-star fa-xs"></i>
-              </span>
-              <form action="/restaurants/{{ Restaurant.id }}/edit" method="POST">
-                <button type="submit">Edit</button>
-              </form>
+              </span>              
+                <button>
+                  <a href="/restaurants/{{ Restaurant.id }}/edit">Edit</a>
+                </button>
             </div>
           </div>
         </a>
