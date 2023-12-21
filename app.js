@@ -7,16 +7,22 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const { engine } = require('express-handlebars')
 
 const db = require('./models')
-const Restaurant = db.Restaurant
+const Restaurant = db.Result
 
+app.engine('.hbs', engine({ extname: '.hbs' }))
+app.set('view engine', '.hbs')
+app.set('views', './views')
+
+//首頁顯示餐廳清單
 app.get('/', (req, res) => {
-  res.send('root path')
-})
-
-app.get('/restaurants', (req, res) => {
-  res.send('get all restaurants list')
+  Restaurant.findAll({ attribute: ['id', 'name'], raw: true }).then(
+    (Restaurant) => {
+      res.render('index', { Restaurant })
+    }
+  )
 })
 
 app.get('/restaurants/:id', (req, res) => {
