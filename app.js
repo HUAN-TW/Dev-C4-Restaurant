@@ -16,8 +16,12 @@ app.engine('.hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
 
-//首頁顯示餐廳清單
 app.get('/', (req, res) => {
+  res.redirect('/restaurant')
+})
+
+//顯示餐廳清單
+app.get('/restaurant', (req, res) => {
   Restaurant.findAll({ attribute: ['id', 'name'], raw: true }).then(
     (Restaurant) => {
       res.render('index', { Restaurant })

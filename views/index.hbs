@@ -42,11 +42,13 @@
               <div class="restaurant-category mb-1">
                 <i class="fas fa-utensils pr-2"></i> {{Restaurant.category}}
               </div>
-
               <span class="badge rounded-pill bg-danger font-weight-normal">
                 {{Restaurant.rating}}
                 <i class="fas fa-star fa-xs"></i>
               </span>
+              <form action="/restaurants/{{ Restaurant.id }}/edit" method="POST">
+                <button type="submit">Edit</button>
+              </form>
             </div>
           </div>
         </a>
