@@ -24,9 +24,14 @@ app.get('/', (req, res) => {
     }
   )
 })
-
+//顯示restaurant detail
 app.get('/restaurants/:id', (req, res) => {
-  res.sned(`get ${{ id }} detail`)
+  const id = req.params.id
+  return Restaurant.findOne({ where: { id: id }, raw: true }).then(
+    (Restaurant) => {
+      res.render('show', { Restaurant })
+    }
+  )
 })
 
 app.post('/restaurants/new', (req, res) => {
