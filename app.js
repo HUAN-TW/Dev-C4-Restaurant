@@ -6,6 +6,7 @@
 
 const express = require('express')
 const app = express()
+const methodOverride = require('method-override')
 const port = 3000
 const { engine } = require('express-handlebars')
 
@@ -15,6 +16,10 @@ const Restaurant = db.Result
 app.engine('.hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
+//設置 express.urlencoded
+app.use(express.urlencoded({ extended: true }))
+//設定methodOverride
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   res.redirect('/restaurant')
@@ -45,6 +50,16 @@ app.get('/restaurants/:id', (req, res) => {
       res.render('show', { Restaurant })
     }
   )
+})
+
+
+app.post('/restaurants', (req, res) => {
+  res.send('post add restaurans')
+  const add_data =req.body
+  return Restaurant.create({ add_data })
+    .then(() => res.redirect('/restarants'))
+    .catch((err) => console.log(err))
+  res.send('新增餐廳')
 })
 
 app.listen(port, () => {
