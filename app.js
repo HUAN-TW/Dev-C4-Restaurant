@@ -34,7 +34,7 @@ app.get('/restaurants', (req, res) => {
   )
 })
 
-//Todo
+//導頁到edit
 app.get('/restaurant/:id/edit', (req, res) => {
   const id = req.params.id
 
@@ -58,7 +58,7 @@ app.get('/restaurant/:id/edit', (req, res) => {
       res.status(500).send('Server error')
     })
 })
-
+// 更新到DB功能
 app.put('/restaurants/:id', (req, res) => {
   const body = req.body
   const id = req.params.id
@@ -105,6 +105,14 @@ app.get('/restaurants/:id', (req, res) => {
     (Restaurant) => {
       res.render('show', { Restaurant })
     }
+  )
+})
+//刪除
+app.delete('/restaurants/:id', (req, res) => {
+  const id = req.params.id
+  //destory sequelize 語法 delete from Todos where id = '1'
+  return Restaurant.destroy({ where: { id } }).then(() =>
+    res.redirect('/restaurants')
   )
 })
 
