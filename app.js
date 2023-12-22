@@ -59,6 +59,15 @@ app.get('/restaurant/:id/edit', (req, res) => {
     })
 })
 
+app.put('/restaurants/:id', (req, res) => {
+  const body = req.body
+  const id = req.params.id
+  console.log(body)
+  //update sequelize 語法 update
+  return Restaurant.update(body, { where: { id } }).then(() =>
+    res.redirect(`/restaurants/${id}`)
+  )
+})
 //路由到add頁面//
 app.get('/restaurants/add', (req, res) => {
   return Restaurant.findAll({ attribute: ['category'], raw: true }).then(
