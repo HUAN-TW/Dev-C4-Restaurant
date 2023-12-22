@@ -1,8 +1,12 @@
 //Todo 新增一家餐廳 POST restaurants/add ✔️
 //Todo 餐廳的詳細資訊 GET restaurants/:id ✔️
 //Todo 瀏覽全部所有餐廳 GET restaurants ✔️
-//Todo 修改一家餐廳的資訊 PUT restaurants/:id/edit
-//Todo 刪除一家餐廳 DELETE restaurants/:id
+//Todo 修改一家餐廳的資訊 PUT restaurants/:id/edit ✔️
+//Todo 刪除一家餐廳 DELETE restaurants/:id ✔️
+
+//Todo 以助教來看同學有優化或特別做過什麼
+//Todo 改介面、UI操作更彈性(search)、排序
+//Todo 可以再建一張category表 , 如果類別少就直接寫在code裡面
 
 const express = require('express')
 const app = express()
@@ -16,6 +20,10 @@ const Restaurant = db.Result
 app.engine('.hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
+
+// 讓express知道有public是靜態檔案路徑
+app.use(express.static('public'))
+
 //設置 express.urlencoded
 app.use(express.urlencoded({ extended: true }))
 //設定methodOverride
@@ -110,7 +118,7 @@ app.get('/restaurants/:id', (req, res) => {
 //刪除
 app.delete('/restaurants/:id', (req, res) => {
   const id = req.params.id
-  //destory sequelize 語法 delete from Todos where id = '1'
+  //destory sequelize 語法 delete
   return Restaurant.destroy({ where: { id } }).then(() =>
     res.redirect('/restaurants')
   )

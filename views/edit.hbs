@@ -32,7 +32,7 @@
                 <option disabled selected value="">{{restaurant.category}}▼</option>
                     {{#each categories as |data|}}
                     {{!-- option 用撈DB資料 --}}
-                    <option>{{data.category}}</option>
+                    <option value="{{data.category}}">{{data.category}}</option>
 
                     {{/each}}
                     <option>其他</option>
