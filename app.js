@@ -52,14 +52,30 @@ app.get('/restaurants/:id', (req, res) => {
   )
 })
 
-
 app.post('/restaurants', (req, res) => {
-  res.send('post add restaurans')
-  const add_data =req.body
-  return Restaurant.create({ add_data })
-    .then(() => res.redirect('/restarants'))
-    .catch((err) => console.log(err))
-  res.send('新增餐廳')
+  // 確保 req.body 是一個對象或者陣列
+  const data = req.body
+
+  // 如果 data 是一個對象，轉換它為一個陣列
+  const entries = Array.isArray(data) ? data : [data]
+
+  const add_data = entries.map((item) => ({
+    ...item,
+    createdAt: new Date(), // 設置當前時間為 createdAt
+    updatedAt: new Date(), // 設置當前時間為 updatedAt
+  }))
+
+  console.log(add_data)
+  Restaurant.bulkCreate(add_data)
+    .then(() => {
+      // 當數據成功新增後，發送一個成功響應或重定向
+      res.status(201).send('新增餐廳成功')
+    })
+    .catch((err) => {
+      // 如果有錯誤發生，記錄錯誤並發送錯誤響應
+      console.error('新增餐廳過程中發生錯誤:', err)
+      res.status(500).send('新增餐廳過程中發生錯誤')
+    })
 })
 
 app.listen(port, () => {
