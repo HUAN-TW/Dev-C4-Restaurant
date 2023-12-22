@@ -46,9 +46,17 @@
                 {{Restaurant.rating}}
                 <i class="fas fa-star fa-xs"></i>
               </span>              
-                <button>
-                  <a href="/restaurants/{{ Restaurant.id }}/edit">Edit</a>
-                </button>
+              <div class="fn-bar mt-3">
+                <a href="/restaurant/{{Restaurant.id}}/edit">
+                  <i class="fa-solid fa-pen-to-square" style="margin-right: 3px;"></i>編輯
+                </a>
+                <a href="/restaurants/{{Restaurant.id}}" class="ms-3">
+                  <i class="fa-solid fa-circle-info" style="margin-right: 3px;"></i>詳細
+                </a>
+                <form id="delete-restaurant" method="post" class="ms-3">
+                  <button type="button" onclick="confirmDelete({{Restaurant.id}})" class="btn btn-secondary"><i class="fa-solid fa-trash-can"></i></button>
+                </form>
+              </div>
             </div>
           </div>
         </a>

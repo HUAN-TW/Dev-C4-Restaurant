@@ -1,14 +1,14 @@
-//Todo 新增一家餐廳 POST restaurants/add
-//Todo 餐廳的詳細資訊 GET restaurants/:id
-//Todo 瀏覽全部所有餐廳 GET restaurants
+//Todo 新增一家餐廳 POST restaurants/add ✔️
+//Todo 餐廳的詳細資訊 GET restaurants/:id ✔️
+//Todo 瀏覽全部所有餐廳 GET restaurants ✔️
 //Todo 修改一家餐廳的資訊 PUT restaurants/:id/edit
 //Todo 刪除一家餐廳 DELETE restaurants/:id
 
 const express = require('express')
 const app = express()
 const methodOverride = require('method-override')
-const port = 3000
 const { engine } = require('express-handlebars')
+const port = 3000
 
 const db = require('./models')
 const Restaurant = db.Result
@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
-  res.redirect('/restaurant')
+  res.redirect('/restaurants')
 })
 
 //顯示餐廳清單
-app.get('/restaurant', (req, res) => {
+app.get('/restaurants', (req, res) => {
   Restaurant.findAll({ attribute: ['id', 'name'], raw: true }).then(
     (Restaurant) => {
       res.render('index', { Restaurant })
@@ -34,12 +34,59 @@ app.get('/restaurant', (req, res) => {
   )
 })
 
+//Todo
+app.get('/restaurant/:id/edit', (req, res) => {
+  const id = req.params.id
+
+  // 同时执行两个查询
+  Promise.all([
+    Restaurant.findOne({ where: { id: id }, raw: true }),
+    Restaurant.findAll({ attributes: ['category'], raw: true }),
+  ])
+    .then((results) => {
+      // results[0] 是第一个查询的结果，results[1] 是第二个查询的结果
+      const restaurant = results[0]
+      const categories = results[1]
+      console.log(categories)
+
+      // 将两个查询的结果一起发送到视图
+      res.render('edit', { restaurant, categories })
+    })
+    .catch((err) => {
+      // 处理任何可能出现的错误
+      console.error('Error fetching data:', err)
+      res.status(500).send('Server error')
+    })
+})
+
+//路由到add頁面//
 app.get('/restaurants/add', (req, res) => {
   return Restaurant.findAll({ attribute: ['category'], raw: true }).then(
     (category) => {
       res.render('add', { category })
     }
   )
+})
+// post 新增到DB
+app.post('/restaurants', (req, res) => {
+  const data = req.body
+
+  const entries = Array.isArray(data) ? data : [data]
+
+  const add_data = entries.map((item) => ({
+    ...item,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }))
+
+  Restaurant.bulkCreate(add_data)
+    .then(() => {
+      res.redirect('/restaurants')
+    })
+    .catch((err) => {
+      console.error('新增餐廳過程中發生錯誤:', err)
+      res.status(500).send('新增餐廳過程中發生錯誤')
+    })
 })
 
 //顯示restaurant detail
@@ -50,32 +97,6 @@ app.get('/restaurants/:id', (req, res) => {
       res.render('show', { Restaurant })
     }
   )
-})
-
-app.post('/restaurants', (req, res) => {
-  // 確保 req.body 是一個對象或者陣列
-  const data = req.body
-
-  // 如果 data 是一個對象，轉換它為一個陣列
-  const entries = Array.isArray(data) ? data : [data]
-
-  const add_data = entries.map((item) => ({
-    ...item,
-    createdAt: new Date(), // 設置當前時間為 createdAt
-    updatedAt: new Date(), // 設置當前時間為 updatedAt
-  }))
-
-  console.log(add_data)
-  Restaurant.bulkCreate(add_data)
-    .then(() => {
-      // 當數據成功新增後，發送一個成功響應或重定向
-      res.status(201).send('新增餐廳成功')
-    })
-    .catch((err) => {
-      // 如果有錯誤發生，記錄錯誤並發送錯誤響應
-      console.error('新增餐廳過程中發生錯誤:', err)
-      res.status(500).send('新增餐廳過程中發生錯誤')
-    })
 })
 
 app.listen(port, () => {
